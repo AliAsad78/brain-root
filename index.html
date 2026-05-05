@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindSpark — One-Minute Brain Teasers</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #06080f;
+  --bg2: #0c0f1a;
+  --bg3: #111527;
+  --card: rgba(255,255,255,0.035);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --primary: #7c3aed;
+  --primary2: #a855f7;
+  --cyan: #06b6d4;
+  --cyan2: #22d3ee;
+  --amber: #f59e0b;
+  --amber2: #fbbf24;
+  --rose: #f43f5e;
+  --green: #10b981;
+  --text: #f0eeff;
+  --muted: rgba(240,238,255,0.45);
+  --muted2: rgba(240,238,255,0.25);
+  --glow-p: rgba(124,58,237,0.25);
+  --glow-c: rgba(6,182,212,0.2);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* ─── NOISE OVERLAY ─── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.5;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--primary);border-radius:2px}
+
+/* ══════════════════════════════
+   INTRO SCREEN
+══════════════════════════════ */
+#intro{
+  position:fixed;inset:0;z-index:1000;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow:hidden;
+}
+#intro.exit{animation:introExit 0.7s cubic-bezier(0.4,0,0.2,1) forwards}
+@keyframes introExit{to{opacity:0;transform:scale(1.04);visibility:hidden}}
+
+/* Animated grid bg for intro */
+.intro-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(124,58,237,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,58,237,0.07) 1px, transparent 1px);
+  background-size:48px 48px;
+  animation:gridShift 6s linear infinite;
+}
+@keyframes gridShift{to{background-position:48px 48px}}
+
+.intro-glow1{
+  position:absolute;
+  width:600px;height:600px;
+  background:radial-gradient(circle, rgba(124,58,237,0.3), transparent 70%);
+  border-radius:50%;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:introGlowPulse 2s ease-in-out infinite alternate;
+}
+.intro-glow2{
+  position:absolute;
+  width:400px;height:400px;
+  background:radial-gradient(circle, rgba(6,182,212,0.2), transparent 70%);
+  border-radius:50%;
+  top:40%;left:60%;
+  animation:introGlowPulse 2.5s 0.5s ease-in-out infinite alternate;
+}
+@keyframes introGlowPulse{to{transform:translate(-50%,-50%) scale(1.2);opacity:0.6}}
+
+.intro-content{
+  position:relative;z-index:2;
+  text-align:center;
+  animation:introReveal 0.8s 0.3s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes introReveal{from{opacity:0;transform:translateY(30px)}}
+
+.intro-icon{
+  font-size:4.5rem;
+  display:block;
+  margin-bottom:24px;
+  animation:iconFloat 3s ease-in-out infinite;
+}
+@keyframes iconFloat{
+  0%,100%{transform:translateY(0) rotate(-5deg)}
+  50%{transform:translateY(-14px) rotate(5deg)}
+}
+
+.intro-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.8rem,7vw,5rem);
+  font-weight:800;
+  line-height:1;
+  letter-spacing:-0.02em;
+  background:linear-gradient(135deg, #fff 0%, var(--primary2) 40%, var(--cyan2) 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:12px;
+}
+.intro-subtitle{
+  font-size:1rem;
+  color:var(--muted);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  margin-bottom:48px;
+}
+
+.intro-pills{
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+  margin-bottom:52px;
+}
+.intro-pill{
+  padding:8px 18px;
+  border-radius:30px;
+  font-size:0.78rem;
+  font-weight:500;
+  letter-spacing:0.08em;
+  border:1px solid var(--border2);
+  background:var(--card);
+  backdrop-filter:blur(10px);
+  color:var(--muted);
+  animation:pillPop 0.5s ease both;
+}
+.intro-pill:nth-child(1){animation-delay:0.7s;border-color:rgba(124,58,237,0.4);color:var(--primary2)}
+.intro-pill:nth-child(2){animation-delay:0.9s;border-color:rgba(6,182,212,0.4);color:var(--cyan2)}
+.intro-pill:nth-child(3){animation-delay:1.1s;border-color:rgba(245,158,11,0.4);color:var(--amber2)}
+@keyframes pillPop{from{opacity:0;transform:scale(0.8) translateY(10px)}}
+
+.intro-bar-wrap{
+  width:280px;margin:0 auto 24px;
+  background:var(--border);
+  border-radius:4px;height:3px;overflow:hidden;
+}
+.intro-bar{
+  height:100%;width:0;
+  background:linear-gradient(90deg,var(--primary),var(--cyan));
+  animation:introBar 2.8s 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
+  border-radius:4px;
+}
+@keyframes introBar{to{width:100%}}
+
+.intro-skip{
+  font-size:0.72rem;color:var(--muted2);
+  letter-spacing:0.12em;text-transform:uppercase;
+  cursor:pointer;border:none;background:none;
+  transition:color 0.2s;animation:introReveal 0.5s 1.2s both;
+}
+.intro-skip:hover{color:var(--text)}
+
+/* ══════════════════════════════
+   MAIN APP
+══════════════════════════════ */
+#app{visibility:hidden;opacity:0;transition:opacity 0.6s ease}
+#app.visible{visibility:visible;opacity:1}
+
+/* ─── HEADER ─── */
+header{
+  position:sticky;top:0;z-index:100;
+  padding:0 clamp(16px,4vw,48px);
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  background:rgba(6,8,15,0.85);
+  backdrop-filter:blur(20px);
+}
+.logo{
+  font-family:'Syne',sans-serif;
+  font-size:1.3rem;font-weight:800;
+  letter-spacing:-0.01em;
+  background:linear-gradient(90deg,var(--primary2),var(--cyan2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.logo span{-webkit-text-fill-color:var(--text)}
+
+.header-right{display:flex;align-items:center;gap:16px}
+
+.streak-badge{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 14px;
+  background:rgba(245,158,11,0.1);
+  border:1px solid rgba(245,158,11,0.3);
+  border-radius:20px;
+  font-size:0.78rem;font-weight:600;
+  color:var(--amber2);
+}
+
+.timer-ring{
+  position:relative;width:40px;height:40px;
+}
+.timer-ring svg{transform:rotate(-90deg)}
+.timer-ring circle{
+  fill:none;stroke:var(--border2);stroke-width:3;
+}
+.timer-ring .progress{
+  stroke:var(--cyan);
+  stroke-dasharray:100;
+  stroke-dashoffset:0;
+  stroke-linecap:round;
+  transition:stroke-dashoffset 1s linear, stroke 0.5s;
+}
+.timer-num{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.7rem;font-weight:700;
+  font-family:'Syne',sans-serif;
+  color:var(--cyan);
+}
+
+/* ─── HERO / MAIN ─── */
+main{
+  max-width:760px;margin:0 auto;
+  padding:40px clamp(16px,4vw,32px) 80px;
+}
+
+/* Category tabs */
+.cat-tabs{
+  display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap;
+}
+.cat-tab{
+  padding:7px 16px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--muted);
+  font-size:0.78rem;font-weight:500;
+  cursor:pointer;
+  transition:all 0.2s;
+  font-family:'Outfit',sans-serif;
+}
+.cat-tab:hover{border-color:var(--border2);color:var(--text)}
+.cat-tab.active{
+  background:var(--primary);border-color:var(--primary);
+  color:#fff;
+  box-shadow:0 0 20px var(--glow-p);
+}
+
+/* ─── PUZZLE CARD ─── */
+.puzzle-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  position:relative;
+  transition:transform 0.3s;
+}
+.puzzle-card::before{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at top, rgba(124,58,237,0.08), transparent 60%);
+  pointer-events:none;
+}
+
+.card-header{
+  padding:20px 24px 0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.puzzle-type-badge{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:0.7rem;font-weight:600;
+  letter-spacing:0.1em;text-transform:uppercase;
+}
+.badge-pattern{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.35);color:var(--primary2)}
+.badge-math{background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.35);color:var(--cyan2)}
+.badge-visual{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);color:var(--amber2)}
+
+.puzzle-num{
+  font-size:0.72rem;color:var(--muted2);
+  font-family:'Syne',sans-serif;
+}
+
+.card-body{padding:24px}
+
+.puzzle-q{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.1rem,3vw,1.5rem);
+  font-weight:700;
+  line-height:1.4;
+  margin-bottom:8px;
+  color:var(--text);
+}
+.puzzle-hint{
+  font-size:0.82rem;color:var(--muted);
+  margin-bottom:28px;font-style:italic;
+}
+
+/* Visual puzzle display */
+.visual-display{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px;
+  margin-bottom:24px;
+  text-align:center;
+  font-size:clamp(1.4rem,5vw,2.2rem);
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  letter-spacing:0.08em;
+  position:relative;
+  overflow:hidden;
+}
+.visual-display::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(124,58,237,0.04),transparent,rgba(6,182,212,0.04));
+  pointer-events:none;
+}
+
+/* Answer options */
+.options-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:20px;
+}
+.option-btn{
+  padding:14px 16px;
+  border-radius:12px;
+  border:1.5px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;
+  font-size:0.92rem;font-weight:500;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-align:left;
+  position:relative;
+  overflow:hidden;
+}
+.option-btn::before{
+  content:'';
+  position:absolute;inset:0;
+  background:var(--primary);
+  opacity:0;
+  transition:opacity 0.2s;
+}
+.option-btn:hover:not(:disabled){
+  border-color:var(--primary2);
+  color:var(--primary2);
+  transform:translateY(-1px);
+  box-shadow:0 4px 20px var(--glow-p);
+}
+.option-btn:disabled{cursor:default}
+.option-btn.correct{
+  border-color:var(--green)!important;
+  background:rgba(16,185,129,0.12)!important;
+  color:var(--green)!important;
+}
+.option-btn.wrong{
+  border-color:var(--rose)!important;
+  background:rgba(244,63,94,0.1)!important;
+  color:var(--rose)!important;
+}
+.option-btn.reveal{
+  border-color:var(--green)!important;
+  background:rgba(16,185,129,0.08)!important;
+  color:var(--green)!important;
+}
+.option-letter{
+  display:inline-block;
+  width:22px;height:22px;line-height:22px;
+  text-align:center;
+  border-radius:6px;
+  background:var(--border);
+  font-size:0.7rem;font-weight:700;
+  margin-right:8px;
+  font-family:'Syne',sans-serif;
+}
+
+/* Free text input */
+.free-input-wrap{display:flex;gap:10px;margin-bottom:20px}
+.free-input{
+  flex:1;
+  padding:13px 16px;
+  border-radius:12px;
+  border:1.5px solid var(--border);
+  background:var(--bg3);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;
+  font-size:1rem;
+  outline:none;
+  transition:border-color 0.2s;
+}
+.free-input:focus{border-color:var(--primary2)}
+.submit-btn{
+  padding:13px 20px;
+  border-radius:12px;
+  border:none;
+  background:var(--primary);
+  color:#fff;
+  font-family:'Syne',sans-serif;
+  font-weight:700;font-size:0.85rem;
+  cursor:pointer;
+  transition:all 0.2s;
+  white-space:nowrap;
+}
+.submit-btn:hover{background:var(--primary2);box-shadow:0 4px 20px var(--glow-p)}
+
+/* Result panel */
+.result-panel{
+  display:none;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:20px;
+  animation:resultSlide 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.result-panel.show{display:block}
+@keyframes resultSlide{from{opacity:0;transform:translateY(10px)}}
+
+.result-emoji{font-size:2.2rem;margin-bottom:8px;display:block}
+.result-verdict{
+  font-family:'Syne',sans-serif;
+  font-size:1.1rem;font-weight:700;
+  margin-bottom:6px;
+}
+.result-verdict.correct{color:var(--green)}
+.result-verdict.wrong{color:var(--rose)}
+.result-roast{
+  font-size:0.85rem;color:var(--muted);
+  margin-bottom:12px;line-height:1.5;
+}
+.result-explanation{
+  font-size:0.82rem;
+  padding:12px;
+  background:var(--card);
+  border-radius:8px;
+  border:1px solid var(--border);
+  color:var(--muted);
+  line-height:1.6;
+}
+.result-explanation strong{color:var(--text)}
+
+/* Friend result */
+.friend-result{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  background:rgba(124,58,237,0.08);
+  border:1px solid rgba(124,58,237,0.25);
+  border-radius:10px;
+  font-size:0.82rem;
+}
+.friend-result.show{display:block}
+.friend-result-title{
+  font-weight:600;color:var(--primary2);
+  margin-bottom:6px;display:flex;align-items:center;gap:6px;
+}
+
+/* Card footer */
+.card-footer{
+  padding:0 24px 24px;
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+.action-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:9px 18px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--muted);
+  font-family:'Outfit',sans-serif;
+  font-size:0.78rem;font-weight:500;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.action-btn:hover{border-color:var(--border2);color:var(--text)}
+.action-btn.primary-action{
+  background:rgba(124,58,237,0.12);
+  border-color:rgba(124,58,237,0.35);
+  color:var(--primary2);
+}
+.action-btn.primary-action:hover{
+  background:rgba(124,58,237,0.22);
+  box-shadow:0 0 16px var(--glow-p);
+}
+.action-btn.cyan-action{
+  background:rgba(6,182,212,0.1);
+  border-color:rgba(6,182,212,0.3);
+  color:var(--cyan2);
+}
+.action-btn.cyan-action:hover{
+  background:rgba(6,182,212,0.18);
+  box-shadow:0 0 16px var(--glow-c);
+}
+.spacer{flex:1}
+
+/* ─── STATS ROW ─── */
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:24px;
+}
+.stat-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  text-align:center;
+}
+.stat-val{
+  font-family:'Syne',sans-serif;
+  font-size:1.8rem;font-weight:800;
+  background:linear-gradient(135deg,var(--primary2),var(--cyan2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  line-height:1;margin-bottom:4px;
+}
+.stat-lbl{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em}
+
+/* ─── NEXT PUZZLE COUNTDOWN ─── */
+.next-pill{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 18px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:0.8rem;color:var(--muted);
+  margin-top:12px;
+}
+.next-pill .next-count{
+  font-family:'Syne',sans-serif;
+  font-weight:700;color:var(--amber2);
+  min-width:24px;
+}
+
+/* ─── TOAST ─── */
+#toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  color:var(--text);
+  padding:10px 22px;
+  border-radius:30px;
+  font-size:0.82rem;
+  z-index:9000;
+  transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ─── SHARE MODAL ─── */
+#shareModal{
+  display:none;position:fixed;inset:0;z-index:800;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+}
+#shareModal.open{display:flex}
+.modal-box{
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:32px;
+  width:90%;max-width:440px;
+  animation:modalIn 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes modalIn{from{opacity:0;transform:scale(0.92) translateY(20px)}}
+.modal-title{
+  font-family:'Syne',sans-serif;
+  font-size:1.3rem;font-weight:800;
+  margin-bottom:8px;
+}
+.modal-sub{font-size:0.83rem;color:var(--muted);margin-bottom:24px}
+.share-link-box{
+  display:flex;gap:8px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 12px;
+  margin-bottom:20px;
+  align-items:center;
+}
+.share-link-text{
+  flex:1;font-size:0.78rem;color:var(--muted);
+  word-break:break-all;
+  font-family:monospace;
+}
+.copy-btn{
+  padding:7px 14px;
+  border-radius:8px;
+  border:none;
+  background:var(--primary);
+  color:#fff;
+  font-size:0.75rem;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+  transition:all 0.2s;
+}
+.copy-btn:hover{background:var(--primary2)}
+.share-btns{display:flex;gap:10px;flex-wrap:wrap}
+.share-social{
+  flex:1;min-width:110px;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;
+  font-size:0.8rem;font-weight:500;
+  cursor:pointer;text-align:center;
+  transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.share-social:hover{border-color:var(--border2);background:var(--bg3)}
+.modal-close{
+  width:100%;margin-top:16px;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--muted);
+  font-family:'Outfit',sans-serif;
+  font-size:0.83rem;cursor:pointer;
+  transition:all 0.2s;
+}
+.modal-close:hover{color:var(--text);border-color:var(--border2)}
+
+/* ─── CONFETTI ─── */
+.confetti-piece{
+  position:fixed;
+  width:8px;height:8px;
+  border-radius:2px;
+  pointer-events:none;
+  z-index:9998;
+  animation:confettiFall var(--dur,2s) var(--delay,0s) ease-in forwards;
+}
+@keyframes confettiFall{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* ─── CATEGORY LABEL ─── */
+.cat-divider{
+  font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--muted2);margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.cat-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:600px){
+  .options-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .stats-row .stat-card:last-child{grid-column:1/-1}
+  header{padding:0 16px}
+  .card-body,.card-footer{padding:16px}
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}}
+.fade-up{animation:fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both}
+
+/* Sparkle on correct */
+@keyframes sparkle{
+  0%{transform:scale(0) rotate(0deg);opacity:1}
+  100%{transform:scale(1.5) rotate(180deg);opacity:0}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ INTRO ══ -->
+<div id="intro">
+  <div class="intro-grid"></div>
+  <div class="intro-glow1"></div>
+  <div class="intro-glow2"></div>
+  <div class="intro-content">
+    <span class="intro-icon">🧠</span>
+    <div class="intro-title">MindSpark</div>
+    <div class="intro-subtitle">One-Minute Brain Teasers</div>
+    <div class="intro-pills">
+      <span class="intro-pill">🔢 Math Tricks</span>
+      <span class="intro-pill">🌀 Pattern Recognition</span>
+      <span class="intro-pill">👁️ Visual Illusions</span>
+    </div>
+    <div class="intro-bar-wrap"><div class="intro-bar"></div></div>
+    <button class="intro-skip" onclick="skipIntro()">Skip intro ›</button>
+  </div>
+</div>
+
+<!-- ══ SHARE MODAL ══ -->
+<div id="shareModal">
+  <div class="modal-box">
+    <div class="modal-title">⚡ Challenge a Friend</div>
+    <div class="modal-sub">Share this puzzle and see if they can beat you!</div>
+    <div class="share-link-box">
+      <span class="share-link-text" id="shareLinkText">—</span>
+      <button class="copy-btn" onclick="copyLink()">Copy</button>
+    </div>
+    <div class="share-btns">
+      <button class="share-social" onclick="shareWhatsApp()">💬 WhatsApp</button>
+      <button class="share-social" onclick="shareTwitter()">🐦 Twitter / X</button>
+      <button class="share-social" onclick="downloadCard()">📥 Download Card</button>
+    </div>
+    <button class="modal-close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div id="toast"></div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+  <header>
+    <div class="logo">Mind<span>Spark</span></div>
+    <div class="header-right">
+      <div class="streak-badge">🔥 <span id="streakCount">0</span> streak</div>
+      <div class="timer-ring" title="Next puzzle in...">
+        <svg viewBox="0 0 36 36" width="40" height="40">
+          <circle cx="18" cy="18" r="15.9"/>
+          <circle class="progress" id="timerCircle" cx="18" cy="18" r="15.9" stroke-dasharray="100 100"/>
+        </svg>
+        <div class="timer-num" id="timerNum">60</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val" id="statCorrect">0</div>
+        <div class="stat-lbl">Correct</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statPlayed">0</div>
+        <div class="stat-lbl">Played</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statAccuracy">—</div>
+        <div class="stat-lbl">Accuracy</div>
+      </div>
+    </div>
+
+    <!-- Cat tabs -->
+    <div class="cat-tabs">
+      <button class="cat-tab active" data-cat="all" onclick="filterCat(this,'all')">All</button>
+      <button class="cat-tab" data-cat="pattern" onclick="filterCat(this,'pattern')">🌀 Pattern</button>
+      <button class="cat-tab" data-cat="math" onclick="filterCat(this,'math')">🔢 Math</button>
+      <button class="cat-tab" data-cat="visual" onclick="filterCat(this,'visual')">👁️ Visual</button>
+    </div>
+
+    <!-- Puzzle card -->
+    <div class="puzzle-card" id="puzzleCard">
+      <div class="card-header">
+        <span class="puzzle-type-badge" id="typeBadge"></span>
+        <span class="puzzle-num" id="puzzleNum">#1</span>
+      </div>
+      <div class="card-body">
+        <div class="puzzle-q" id="puzzleQ"></div>
+        <div class="puzzle-hint" id="puzzleHint"></div>
+        <div class="visual-display" id="visualDisplay" style="display:none"></div>
+
+        <!-- MCQ options -->
+        <div class="options-grid" id="optionsGrid"></div>
+
+        <!-- Free input -->
+        <div class="free-input-wrap" id="freeInputWrap" style="display:none">
+          <input type="text" class="free-input" id="freeInput" placeholder="Type your answer…" onkeydown="if(event.key==='Enter')checkFree()">
+          <button class="submit-btn" onclick="checkFree()">Check →</button>
+        </div>
+
+        <!-- Result -->
+        <div class="result-panel" id="resultPanel">
+          <span class="result-emoji" id="resultEmoji"></span>
+          <div class="result-verdict" id="resultVerdict"></div>
+          <div class="result-roast" id="resultRoast"></div>
+          <div class="result-explanation" id="resultExp"></div>
+          <div class="friend-result" id="friendResult">
+            <div class="friend-result-title">👥 Your friend's answer:</div>
+            <div id="friendResultText"></div>
+          </div>
+        </div>
+
+        <div class="next-pill" id="nextPill" style="display:none">
+          ⏳ Next puzzle in <span class="next-count" id="nextCount">60</span>s
+          &nbsp;·&nbsp; <span style="cursor:pointer;color:var(--primary2)" onclick="loadNext()">Skip →</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="action-btn primary-action" onclick="openShare()">🔗 Share</button>
+        <button class="action-btn cyan-action" onclick="downloadCard()">📥 Download</button>
+        <div class="spacer"></div>
+        <button class="action-btn" onclick="loadNext()">Next ›</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  DATA — PUZZLES
+// ══════════════════════════════════════════
+const PUZZLES = [
+  // ─ PATTERN ─
+  {id:'p1',cat:'pattern',type:'Pattern',q:'What comes next in the sequence?',hint:'Look at the difference between each number.',visual:'2 · 4 · 8 · 16 · ?',inputType:'mcq',options:['24','32','28','20'],answer:'32',explanation:'Each number doubles. 16 × 2 = <strong>32</strong>.',
+  roasts:["Bro really thought doubling was subtraction 💀","Even my calculator is embarrassed for you 📉","2+2=fish energy detected 🐟","My goldfish got this one right 🐠"]},
+
+  {id:'p2',cat:'pattern',type:'Pattern',q:'Find the odd one out.',hint:'Think about what property connects three of them.',visual:'🐶 🐱 🐦 🦈',inputType:'mcq',options:['🐶 Dog','🐱 Cat','🐦 Bird','🦈 Shark'],answer:'🦈 Shark',explanation:'Dog, Cat, and Bird are common <strong>pets</strong>. Sharks are not typically kept as pets.',
+  roasts:["Sir, you cannot keep a shark as a pet. You simply cannot.","🦈 is literally the apex predator and you chose it as a pet 💀","I too would like a shark in my living room but reality disagrees","You belong in the ocean with that reasoning 🌊"]},
+
+  {id:'p3',cat:'pattern',type:'Pattern',q:'Complete the pattern: A Z B Y C X D ?',hint:'Two alphabets running in opposite directions.',visual:'A · Z · B · Y · C · X · D · ?',inputType:'mcq',options:['E','W','V','U'],answer:'W',explanation:'Odd positions: A B C D (forward). Even positions: Z Y X <strong>W</strong> (backward).',
+  roasts:["The alphabet called. It wants a refund.","You had A B C at home and still fumbled 🤦","26 letters and you still lost","Did you skip the alphabet song as a kid? 🎵"]},
+
+  {id:'p4',cat:'pattern',type:'Pattern',q:'Which number replaces the question mark?\n3, 7, 15, 31, ?',hint:'Double and add something each time.',visual:'3 → 7 → 15 → 31 → ?',inputType:'mcq',options:['47','55','63','71'],answer:'63',explanation:'Rule: n×2 + 1. 3→7→15→31→<strong>63</strong> (31×2+1=63).',
+  roasts:["63 was RIGHT THERE waving at you 👋","Math said 'trust the process'. You did not.","Bro picked a random number and hoped for the best 🎲","The sequence is crying right now 😢"]},
+
+  {id:'p5',cat:'pattern',type:'Pattern',q:'What is the missing letter?\nB E H K ?',hint:'Count the gap between each letter.',visual:'B · E · H · K · ?',inputType:'mcq',options:['L','M','N','O'],answer:'N',explanation:'Every letter skips 2: B(+3)→E(+3)→H(+3)→K(+3)→<strong>N</strong>.',
+  roasts:["You skipped counting class huh 😅","The letters are literally dancing in a pattern and you missed the beat 🎵","Even the alphabet is tired of explaining itself to you","Close… but close only counts in horseshoes and hand grenades 🧲"]},
+
+  // ─ MATH ─
+  {id:'m1',cat:'math',type:'Math',q:'A bat and ball cost $1.10 together. The bat costs $1 more than the ball. How much does the ball cost?',hint:"Don't just say 10 cents — think carefully!",visual:null,inputType:'mcq',options:['10¢','5¢','15¢','20¢'],answer:'5¢',explanation:'If ball = x, bat = x + 1.00. Then 2x + 1.00 = 1.10, so x = <strong>5¢</strong>. Most people say 10¢ — classic cognitive trap!',
+  roasts:["10 cents! A classic trap victim, welcome to the club 🪤","Your brain went for the easy answer like a moth to a flame 🦋🔥","Cognitive bias has entered the chat","Even Harvard undergrads get this wrong. You're in GREAT company 😬"]},
+
+  {id:'m2',cat:'math',type:'Math',q:'If you have 6 apples and take away 4, how many do YOU have?',hint:'Read every word carefully.',visual:null,inputType:'mcq',options:['2','4','6','0'],answer:'4',explanation:'You <strong>took away</strong> 4, so YOU have 4 apples. The pile has 2 left, but the question asks what YOU have.',
+  roasts:["You gave away your own apples, didn't you 🍎","Reading is fundamental, my friend. Fun-da-mental.","The apples are right there IN YOUR HANDS and you said 2 💀","Sir/Ma'am you literally took 4 apples. You have 4 apples."]},
+
+  {id:'m3',cat:'math',type:'Math',q:'What is half of 2 + 2?',hint:'Order of operations is everything here.',visual:'½ of 2 + 2 = ?',inputType:'mcq',options:['2','3','4','1'],answer:'3',explanation:'"Half of 2" = 1, then 1 + 2 = <strong>3</strong>. Not half of (2+2) = 2. Order matters!',
+  roasts:["PEMDAS is shaking its head at you right now 😤","You either got 4 or 2. Either way, you divided wrong 😂","Math teachers everywhere just felt a chill","Half a brain cell was deployed. It wasn't enough."]},
+
+  {id:'m4',cat:'math',type:'Math',q:'A snail climbs 3m up a 10m wall each day but slides back 2m each night. How many days to reach the top?',hint:"On the final day, it won't slide back.",visual:'🐌 3m up · 2m back · 10m wall',inputType:'mcq',options:['7 days','8 days','10 days','5 days'],answer:'8 days',explanation:'Net gain: 1m/day. After 7 days = 7m. On day 8 it climbs 3m → reaches <strong>10m</strong> and doesn\'t slide back.',
+  roasts:["You calculated like the snail slides back on the last day too. It doesn't. The snail outsmarted you 🐌","The snail is now faster than your reasoning","10 days? The snail would die of old age first!","Even the snail is looking back at you like 'seriously?'"]},
+
+  {id:'m5',cat:'math',type:'Math',q:'I am thinking of a number. I multiply it by 3, add 6, divide by 3, subtract 2. I get 4. What\'s the number?',hint:'Work backwards from 4.',visual:'×3 → +6 → ÷3 → −2 → 4',inputType:'mcq',options:['4','5','6','3'],answer:'4',explanation:'Reverse: 4+2=6, 6×3=18, 18-6=12, 12÷3=<strong>4</strong>. The answer is 4!',
+  roasts:["Your algebra teacher is somewhere weeping silently 😭","Bro just guessed and left. No working shown.","The number was right in front of you! It gave you hints!","Math mysteries: 1, You: 0 🔍"]},
+
+  // ─ VISUAL ─
+  {id:'v1',cat:'visual',type:'Visual',q:'How many triangles are in this figure?',hint:'Count all sizes — small, medium, and large.',visual:'△\n△ △\n△ △ △',inputType:'mcq',options:['3','6','10','9'],answer:'10',explanation:'Small: 6, Medium (2-row): 3, Large (all): 1. Total = <strong>10 triangles</strong>!',
+  roasts:["You only saw the obvious ones. The hidden triangles are laughing 📐","A triangle conspiracy was happening and you missed it entirely","The triangles were right there hiding in plain sight like your car keys","Geometry said 'look harder.' You didn't."]},
+
+  {id:'v2',cat:'visual',type:'Visual',q:'Read this aloud quickly: What does T-O-P spell?',hint:'Say each letter then say the whole word fast.',visual:'T — O — P\n\nNow say: What do you do at a GREEN light?',inputType:'mcq',options:['Stop','Go','Wait','Brake'],answer:'Go',explanation:'At a green light you <strong>GO</strong>! The trick makes your brain want to say "stop" because you just said T-O-P.',
+  roasts:["Your brain got hacked by three little letters 🤯","T-O-P said 'stop' and you just... obeyed. Helplessly.","That traffic light is NOT green for 'stop', sir 🚦","Your brain is running on cached responses. Clear the cache!"]},
+
+  {id:'v3',cat:'visual',type:'Visual',q:'How many letters F are in this sentence?\n\n"Finished files are the result of years of scientific study combined with the experience of years."',hint:'Read every single word carefully, including small ones.',visual:null,inputType:'mcq',options:['3','4','5','6'],answer:'6',explanation:'There are <strong>6 F\'s</strong>. People miss the F in "of" (3×) because the brain processes "of" as "ov".',
+  roasts:["You literally skipped letters. The F's in 'of' are FEELING DISRESPECTED","Your brain autopiloted and left 3 F's on read","The F's are filing a missing persons report right now","Brains are weird. Yours is weirder. It's okay though 🤗"]},
+
+  {id:'v4',cat:'visual',type:'Visual',q:'Which line is longer — top or bottom?\n\n(Müller-Lyer Illusion)',hint:"Measure with your finger if you need to. Trust nothing.",visual:'←——————→\n⊣——————⊢',inputType:'mcq',options:['Top line','Bottom line','They\'re equal','Cannot tell'],answer:"They're equal",explanation:'They are <strong>exactly equal</strong> length! The arrowheads fool your brain into seeing different lengths — the Müller-Lyer illusion.',
+  roasts:["Your eyes lied to you and you BELIEVED them. Traitor eyes. 👀","Visual cortex: 'trust me bro'. You: 'okay'. Brain: 'lol'","The lines are laughing at your perception right now","Even rulers don't lie. Your eyes do. Never trust your eyes again."]},
+
+  {id:'v5',cat:'visual',type:'Visual',q:'What is the next emoji in the pattern?',hint:'Look at the rotation or sequence carefully.',visual:'🌑 🌒 🌓 🌔 ?',inputType:'mcq',options:['🌕','🌑','🌙','🌟'],answer:'🌕',explanation:'These are moon phases in order! New → Waxing Crescent → Quarter → Gibbous → <strong>Full Moon 🌕</strong>',
+  roasts:["The MOON has a pattern. The MOON. And you missed it.","The moon has been doing this for 4 billion years and you still got it wrong 😭","Werewolves everywhere are disappointed in you 🐺","Astronauts are filing a complaint on your behalf right now 🚀"]},
+];
+
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let state = {
+  currentIdx: 0,
+  currentFilter: 'all',
+  filtered: [],
+  answered: false,
+  correct: 0,
+  played: 0,
+  streak: 0,
+  timer: 60,
+  timerInt: null,
+  autoAdvanceInt: null,
+  sharedPuzzleId: null,
+  friendAnswer: null,
+  friendCorrect: null,
+};
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+window.addEventListener('load', () => {
+  // Check URL params for shared puzzle
+  const params = new URLSearchParams(location.search);
+  const pid = params.get('pid');
+  const fanswer = params.get('fa');
+  const fcorrect = params.get('fc');
+
+  if (pid) {
+    state.sharedPuzzleId = pid;
+    state.friendAnswer = decodeURIComponent(fanswer || '');
+    state.friendCorrect = fcorrect === '1';
+  }
+
+  loadStats();
+  setTimeout(() => {
+    document.getElementById('intro').classList.add('exit');
+    document.getElementById('app').classList.add('visible');
+    filterCat(null, 'all');
+    startTimer();
+  }, 3400);
+});
+
+function skipIntro() {
+  document.getElementById('intro').classList.add('exit');
+  document.getElementById('app').classList.add('visible');
+  filterCat(null, 'all');
+  startTimer();
+}
+
+// ══════════════════════════════════════════
+//  FILTER + LOAD
+// ══════════════════════════════════════════
+function filterCat(el, cat) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  else document.querySelector(`[data-cat="${cat}"]`)?.classList.add('active');
+
+  state.currentFilter = cat;
+  state.filtered = cat === 'all' ? [...PUZZLES] : PUZZLES.filter(p => p.cat === cat);
+  state.currentIdx = 0;
+
+  // If shared puzzle, load it first
+  if (state.sharedPuzzleId) {
+    const si = state.filtered.findIndex(p => p.id === state.sharedPuzzleId);
+    if (si > -1) state.currentIdx = si;
+    state.sharedPuzzleId = null; // only once
+  }
+
+  loadPuzzle();
+}
+
+function loadNext() {
+  clearInterval(state.autoAdvanceInt);
+  state.currentIdx = (state.currentIdx + 1) % state.filtered.length;
+  loadPuzzle();
+  resetTimer();
+}
+
+function loadPuzzle() {
+  const p = state.filtered[state.currentIdx];
+  if (!p) return;
+  state.answered = false;
+
+  // Badge
+  const badge = document.getElementById('typeBadge');
+  badge.textContent = (p.cat === 'pattern' ? '🌀 ' : p.cat === 'math' ? '🔢 ' : '👁️ ') + p.type;
+  badge.className = 'puzzle-type-badge badge-' + p.cat;
+
+  document.getElementById('puzzleNum').textContent = `#${state.filtered.indexOf(p)+1}`;
+  document.getElementById('puzzleQ').textContent = p.q;
+  document.getElementById('puzzleHint').textContent = '💡 ' + p.hint;
+
+  // Visual
+  const vd = document.getElementById('visualDisplay');
+  if (p.visual) {
+    vd.style.display = '';
+    vd.innerHTML = p.visual.replace(/\n/g,'<br>');
+  } else {
+    vd.style.display = 'none';
+  }
+
+  // Options / input
+  const og = document.getElementById('optionsGrid');
+  const fi = document.getElementById('freeInputWrap');
+  og.innerHTML = '';
+
+  if (p.inputType === 'mcq') {
+    fi.style.display = 'none';
+    og.style.display = 'grid';
+    const letters = ['A','B','C','D'];
+    p.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt}`;
+      btn.onclick = () => checkMCQ(opt, p, btn);
+      og.appendChild(btn);
+    });
+  } else {
+    og.style.display = 'none';
+    fi.style.display = 'flex';
+    document.getElementById('freeInput').value = '';
+    document.getElementById('freeInput').focus();
+  }
+
+  // Hide result
+  document.getElementById('resultPanel').classList.remove('show');
+  document.getElementById('nextPill').style.display = 'none';
+  document.getElementById('friendResult').classList.remove('show');
+}
+
+// ══════════════════════════════════════════
+//  ANSWER CHECKING
+// ══════════════════════════════════════════
+const ROASTS = [
+  "Are you even trying? 😂",
+  "My refrigerator got that one right 🧊",
+  "Skill issue detected. Please update brain firmware. 🔧",
+  "You had a 25% chance and still missed 💀",
+  "Even a monkey guessing randomly would get this eventually 🐒",
+  "Not sure if you're trolling or just... 😶",
+];
+
+function getRoast(p) {
+  if (p.roasts && p.roasts.length) return p.roasts[Math.floor(Math.random()*p.roasts.length)];
+  return ROASTS[Math.floor(Math.random()*ROASTS.length)];
+}
+
+function checkMCQ(chosen, p, btn) {
+  if (state.answered) return;
+  state.answered = true;
+  const correct = chosen === p.answer;
+
+  // Highlight options
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.disabled = true;
+    const label = b.textContent.replace(/^[A-D]/,'').trim();
+    if (label === p.answer || b.textContent.includes(p.answer)) b.classList.add('reveal');
+  });
+  if (!correct) btn.classList.add('wrong');
+  else btn.classList.remove('reveal'), btn.classList.add('correct');
+
+  showResult(correct, p, chosen);
+}
+
+function checkFree() {
+  const p = state.filtered[state.currentIdx];
+  const val = document.getElementById('freeInput').value.trim().toLowerCase();
+  const correct = val === p.answer.toLowerCase();
+  document.getElementById('freeInput').disabled = true;
+  showResult(correct, p, val);
+}
+
+function showResult(correct, p, chosen) {
+  state.played++;
+  if (correct) { state.correct++; state.streak++; }
+  else { state.streak = 0; }
+  saveStats();
+  updateStats();
+
+  const panel = document.getElementById('resultPanel');
+  panel.classList.add('show');
+
+  document.getElementById('resultEmoji').textContent = correct ? '🎉' : '💀';
+  const verdict = document.getElementById('resultVerdict');
+  verdict.textContent = correct ? '✅ Correct! Brilliant!' : '❌ Wrong!';
+  verdict.className = 'result-verdict ' + (correct ? 'correct' : 'wrong');
+
+  document.getElementById('resultRoast').textContent = correct
+    ? ['🧠 Your neurons are FIRING today!', '🔥 Big brain energy!', '⚡ Absolutely calculated!', '🏆 You\'re built different!'][Math.floor(Math.random()*4)]
+    : getRoast(p);
+
+  document.getElementById('resultExp').innerHTML = '📖 ' + p.explanation;
+
+  // Friend result (from shared link)
+  if (state.friendAnswer) {
+    const fr = document.getElementById('friendResult');
+    const icon = state.friendCorrect ? '✅' : '❌';
+    const msg = state.friendCorrect ? 'got it right!' : 'got it wrong too!';
+    document.getElementById('friendResultText').innerHTML =
+      `<strong>${icon} Your friend answered:</strong> "${state.friendAnswer}" — they <strong>${msg}</strong>` +
+      (state.friendCorrect && !correct ? '<br><span style="color:var(--rose);font-size:0.78rem">They beat you 😬</span>' : '') +
+      (!state.friendCorrect && correct ? '<br><span style="color:var(--green);font-size:0.78rem">You\'re smarter than your friend 🧠</span>' : '') +
+      (!state.friendCorrect && !correct ? '<br><span style="color:var(--amber2);font-size:0.78rem">Both wrong... you two are a pair 😂</span>' : '') +
+      (state.friendCorrect && correct ? '<br><span style="color:var(--cyan2);font-size:0.78rem">Both got it! Galaxy brains 🌌</span>' : '');
+    fr.classList.add('show');
+    state.friendAnswer = null; // show once
+  }
+
+  // Confetti on correct
+  if (correct) spawnConfetti();
+
+  document.getElementById('nextPill').style.display = 'flex';
+
+  // Auto-advance
+  let countdown = 60;
+  clearInterval(state.autoAdvanceInt);
+  state.autoAdvanceInt = setInterval(() => {
+    countdown--;
+    document.getElementById('nextCount').textContent = countdown;
+    if (countdown <= 0) { clearInterval(state.autoAdvanceInt); loadNext(); }
+  }, 1000);
+}
+
+// ══════════════════════════════════════════
+//  TIMER
+// ══════════════════════════════════════════
+function startTimer() {
+  state.timer = 60;
+  updateTimerUI();
+  clearInterval(state.timerInt);
+  state.timerInt = setInterval(() => {
+    state.timer--;
+    updateTimerUI();
+    if (state.timer <= 0) {
+      state.timer = 60;
+      if (!state.answered) loadNext();
+    }
+  }, 1000);
+}
+
+function resetTimer() {
+  state.timer = 60;
+  updateTimerUI();
+}
+
+function updateTimerUI() {
+  document.getElementById('timerNum').textContent = state.timer;
+  const pct = ((60 - state.timer) / 60) * 100;
+  const circle = document.getElementById('timerCircle');
+  circle.style.strokeDashoffset = pct;
+  circle.style.stroke = state.timer < 15 ? 'var(--rose)' : state.timer < 30 ? 'var(--amber)' : 'var(--cyan)';
+}
+
+// ══════════════════════════════════════════
+//  STATS
+// ══════════════════════════════════════════
+function saveStats() {
+  try {
+    localStorage.setItem('ms_correct', state.correct);
+    localStorage.setItem('ms_played', state.played);
+    localStorage.setItem('ms_streak', state.streak);
+  } catch(e) {}
+}
+
+function loadStats() {
+  try {
+    state.correct = parseInt(localStorage.getItem('ms_correct') || 0);
+    state.played = parseInt(localStorage.getItem('ms_played') || 0);
+    state.streak = parseInt(localStorage.getItem('ms_streak') || 0);
+  } catch(e) {}
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('statCorrect').textContent = state.correct;
+  document.getElementById('statPlayed').textContent = state.played;
+  const acc = state.played ? Math.round((state.correct/state.played)*100)+'%' : '—';
+  document.getElementById('statAccuracy').textContent = acc;
+  document.getElementById('streakCount').textContent = state.streak;
+}
+
+// ══════════════════════════════════════════
+//  SHARE
+// ══════════════════════════════════════════
+function buildShareURL() {
+  const p = state.filtered[state.currentIdx];
+  if (!p) return location.href;
+  const chosen = getChosen();
+  const correct = chosen === p.answer ? '1' : '0';
+  const base = location.origin + location.pathname;
+  return `${base}?pid=${p.id}&fa=${encodeURIComponent(chosen)}&fc=${correct}`;
+}
+
+function getChosen() {
+  // Try to find which option was selected
+  let chosen = '';
+  document.querySelectorAll('.option-btn').forEach(b => {
+    if (b.classList.contains('correct') || b.classList.contains('wrong')) {
+      chosen = b.textContent.replace(/^[A-D]/,'').trim();
+    }
+  });
+  if (!chosen) {
+    const fi = document.getElementById('freeInput');
+    chosen = fi.value || 'no answer';
+  }
+  return chosen;
+}
+
+function openShare() {
+  const url = buildShareURL();
+  document.getElementById('shareLinkText').textContent = url;
+  document.getElementById('shareModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('shareModal').classList.remove('open');
+}
+
+function copyLink() {
+  const url = buildShareURL();
+  navigator.clipboard.writeText(url).then(() => toast('🔗 Link copied!')).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = url; document.body.appendChild(el);
+    el.select(); document.execCommand('copy'); document.body.removeChild(el);
+    toast('🔗 Link copied!');
+  });
+}
+
+function shareWhatsApp() {
+  const p = state.filtered[state.currentIdx];
+  const url = buildShareURL();
+  const text = `🧠 Can you solve this brain teaser?\n\n"${p.q}"\n\nChallenge accepted? → ${url}`;
+  window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(text), '_blank');
+  closeModal();
+}
+
+function shareTwitter() {
+  const p = state.filtered[state.currentIdx];
+  const url = buildShareURL();
+  const text = `🧠 Brain teaser: "${p.q.slice(0,60)}…"\n\nCan you solve it? 🔥 via @MindSpark\n${url}`;
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
+  closeModal();
+}
+
+function downloadCard() {
+  const p = state.filtered[state.currentIdx];
+  if (!p) return;
+  closeModal();
+
+  const cvs = document.createElement('canvas');
+  cvs.width = 800; cvs.height = 450;
+  const ctx = cvs.getContext('2d');
+
+  // BG gradient
+  const grd = ctx.createLinearGradient(0,0,800,450);
+  grd.addColorStop(0,'#0c0f1a');
+  grd.addColorStop(1,'#111527');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0,0,800,450);
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(124,58,237,0.08)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < 800; x += 40) { ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,450);ctx.stroke(); }
+  for (let y = 0; y < 450; y += 40) { ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(800,y);ctx.stroke(); }
+
+  // Glow
+  const rg = ctx.createRadialGradient(400,225,0,400,225,350);
+  rg.addColorStop(0,'rgba(124,58,237,0.15)');
+  rg.addColorStop(1,'transparent');
+  ctx.fillStyle = rg;
+  ctx.fillRect(0,0,800,450);
+
+  // Logo
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillStyle = '#a855f7';
+  ctx.fillText('⚡ MindSpark', 40, 48);
+
+  // Badge
+  const badgeLabel = (p.cat === 'pattern' ? '🌀 Pattern' : p.cat === 'math' ? '🔢 Math' : '👁️ Visual');
+  ctx.font = '13px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.fillText(badgeLabel, 40, 80);
+
+  // Question
+  ctx.font = 'bold 26px sans-serif';
+  ctx.fillStyle = '#f0eeff';
+  const words = p.q.split(' ');
+  let line = '', y = 130;
+  words.forEach(w => {
+    const test = line + w + ' ';
+    if (ctx.measureText(test).width > 700) { ctx.fillText(line, 40, y); line = w + ' '; y += 36; }
+    else line = test;
+  });
+  ctx.fillText(line, 40, y);
+
+  // Visual
+  if (p.visual) {
+    ctx.font = 'bold 32px monospace';
+    ctx.fillStyle = 'rgba(6,182,212,0.9)';
+    ctx.fillText(p.visual.replace(/\n.*$/,''), 40, y + 60);
+  }
+
+  // CTA
+  ctx.font = '16px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.fillText('Can you solve it? 🔥', 40, 400);
+  ctx.fillStyle = 'rgba(124,58,237,0.6)';
+  ctx.fillText('mindspark.app', 640, 420);
+
+  // Border
+  ctx.strokeStyle = 'rgba(124,58,237,0.4)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(1,1,798,448);
+
+  const a = document.createElement('a');
+  a.download = `mindspark-${p.id}.png`;
+  a.href = cvs.toDataURL('image/png');
+  a.click();
+  toast('📥 Card downloaded!');
+}
+
+// ══════════════════════════════════════════
+//  CONFETTI
+// ══════════════════════════════════════════
+const CONFETTI_COLORS = ['#7c3aed','#a855f7','#06b6d4','#22d3ee','#f59e0b','#10b981','#f43f5e'];
+function spawnConfetti() {
+  for (let i = 0; i < 50; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:-10px;
+      background:${CONFETTI_COLORS[Math.floor(Math.random()*CONFETTI_COLORS.length)]};
+      --dur:${1.2+Math.random()*1.5}s;
+      --delay:${Math.random()*0.5}s;
+      transform:rotate(${Math.random()*360}deg);
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+    `;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 2500);
+  }
+}
+
+// ══════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Close modal on outside click
+document.getElementById('shareModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
